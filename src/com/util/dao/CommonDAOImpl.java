@@ -24,12 +24,13 @@ import org.springframework.stereotype.Repository;
 @Repository("dao")
 public class CommonDAOImpl implements CommonDAO{
 	
+	//@Autowired는 변수만 선언해두면 밑에 주석처리한 부분을 자동으로 실행되게 함.
 	@Autowired
 	private SqlMapClientTemplate sqlMapClientTemplate;
 	 
-	public void setSqlMapClientTemplate(SqlMapClientTemplate SqlMapClientTemplate) {
-		this.sqlMapClientTemplate = SqlMapClientTemplate;
-	}
+//	public void setSqlMapClientTemplate(SqlMapClientTemplate SqlMapClientTemplate) {
+//		this.sqlMapClientTemplate = SqlMapClientTemplate;
+//	}
 	
 	
 	@Override

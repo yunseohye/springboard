@@ -1,4 +1,9 @@
 package com.utill;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 //페이징 처리를 해주는 클래스
 
 /*
@@ -12,6 +17,7 @@ package com.utill;
  page : page index 숫자
  */
 
+@Service("myPage")
 public class MyPage {
 
 	//전체 페이지의 갯수 구하기
