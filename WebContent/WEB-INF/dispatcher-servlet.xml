@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/" /> 
+    <property name="suffix" value=".jsp" /> 
+</bean>
+
+<!-- 어노테이션 사용 설정 -->
+<!-- 이 패키지 안에서만 어노테이션을 사용할거야 base-package="경로 지정" -->
+<!-- 패키지 전체에서 어노테이션을 사용할거야 base-package="*" -->
+<!-- jdk8에서는 어노테이션을 인식하지 못한다. 때문에 jdk7을 사용함 -->
+<context:component-scan base-package="*" scoped-proxy="no"/>
+
+<!-- 어노테이션을 사용하기위한 Controller 등록 -->
+<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" 
+p:alwaysUseFullPath="true">
+	<property name="order" value="1" />
+</bean>
+
+
+</beans>
