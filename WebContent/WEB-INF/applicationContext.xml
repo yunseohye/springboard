@@ -3,6 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
@@ -12,5 +13,37 @@
 		http://www.springframework.org/schema/context/spring-context-2.5.xsd
 		http://www.springframework.org/schema/util 
 		http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+  
+  
+  <!-- 공장을 건설했으면 사용자가 쓸 시제품을 만들면 된다. -->
+  <bean id="sqlMapClientTemplate" 
+  class="org.springframework.orm.ibatis.SqlMapClientTemplate"
+  p:sqlMapClient-ref="sqlMapClient"/>
+  
+  <!-- 공장 건설 iBatis:spring고유의 기능이 아님-->
+  <!-- 공장 역할 1) DB의 위치정보 + 사용자가 만든 Sql 쿼리를 합쳐줌 -->
+  <bean id="sqlMapClient"
+  class="org.springframework.orm.ibatis.SqlMapClientFactoryBean" 
+  p:dataSource-ref="dataSource"
+  p:configLocation="WEB-INF/sqlMapConfig/sqlMapConfig.xml"
+  />
+  
+  
+  <!-- transaction처리(이 작업을 통해 밑의 iBatis값을 가져다 쓸 수 있다. -->
+  <bean id="transactionManager"
+  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  	<property name="dataSource" ref="dataSource"></property>
+  </bean>
+  
+  <!-- spring2.5에서의 iBatis settings -->
+  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
+  destroy-method="close">
+  	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+  	<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+  	<property name="username" value="suzi" />
+  	<property name="password" value="a123" />
+  </bean>
+  
+  
            
 </beans>  

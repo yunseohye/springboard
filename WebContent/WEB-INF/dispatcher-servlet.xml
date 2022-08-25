@@ -22,10 +22,9 @@
 <context:component-scan base-package="*" scoped-proxy="no"/>
 
 <!-- 어노테이션을 사용하기위한 Controller 등록 -->
-<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" 
+<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"
 p:alwaysUseFullPath="true">
-	<property name="order" value="1" />
+	<property name="order" value="1"/>
 </bean>
-
 
 </beans>

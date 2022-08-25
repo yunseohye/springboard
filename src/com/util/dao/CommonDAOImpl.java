@@ -4,38 +4,44 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import com.ibatis.sqlmap.client.SqlMapClient;
-import com.util.sqlMap.sqlMapConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ibatis.SqlMapClientTemplate;
+import org.springframework.stereotype.Repository;
 
+
+/*
+ @Repository : 저장소 컴포넌트(DAO 등).
+ @Service : 상태없는 서비스 컴포넌트.
+ @Autowired 어노테이션 : Spring에서 의존관계를 자동으로 설정
+ @Resource 어노테이션 : 의존하는 빈 객체를 전달 할 때 사용
+ 
+ @Resource 는 이름을 지정할 수 있으나 @Autowired는 이름을 지정할 수 없고 id 값과 일치해야한다.
+ 
+  - Service에 있는 @Autowired는 @Repository("dao")에 등록된 dao와 변수명이 같아야 한다.
+  - @Autowired 어노테이션은 Spring에서 의존관계를 자동으로 설정 
+ */
+
+@Repository("dao")
 public class CommonDAOImpl implements CommonDAO{
 	
-	private SqlMapClient sqlMap;
+	@Autowired
+	private SqlMapClientTemplate sqlMapClientTemplate;
+	 
+	public void setSqlMapClientTemplate(SqlMapClientTemplate SqlMapClientTemplate) {
+		this.sqlMapClientTemplate = SqlMapClientTemplate;
+	}
 	
-	public CommonDAOImpl() {
-		this.sqlMap = sqlMapConfig.getSqlMapInstance();
-	}
-	public static CommonDAO getInstance() {
-		
-		//CommonDAO dao = new CommonDAOImpl();
-		return new CommonDAOImpl();
-	}
 	
 	@Override
 	public void insertData(String id, Object value) throws SQLException {
 		
 		try {
 			
-			sqlMap.startTransaction();
-			
-			sqlMap.insert(id,value);
-			
-			sqlMap.commitTransaction();
+			sqlMapClientTemplate.insert(id,value);
 			
 		} catch (Exception e) {
 			System.out.println(e.toString());
 			
-		}finally {
-			sqlMap.endTransaction();
 		}
 		
 	}
@@ -47,17 +53,11 @@ public class CommonDAOImpl implements CommonDAO{
 		
 		try {
 			
-			sqlMap.startTransaction();
-			
-			result = sqlMap.update(id,value);
-			
-			sqlMap.commitTransaction();
+			result = sqlMapClientTemplate.update(id,value);
 			
 		} catch (Exception e) {
 			System.out.println(e.toString());
 			
-		}finally {
-			sqlMap.endTransaction();
 		}
 		
 		return result;
@@ -70,17 +70,11 @@ public class CommonDAOImpl implements CommonDAO{
 		
 		try {
 			
-			sqlMap.startTransaction();
-			
-			result = sqlMap.update(id,map);
-			
-			sqlMap.commitTransaction();
+			result = sqlMapClientTemplate.update(id,map);
 			
 		} catch (Exception e) {
 			System.out.println(e.toString());
 			
-		}finally {
-			sqlMap.endTransaction();
 		}
 		
 		return result;
@@ -93,17 +87,11 @@ public class CommonDAOImpl implements CommonDAO{
 		
 		try {
 			
-			sqlMap.startTransaction();
-			
-			result = sqlMap.delete(id,value);
-			
-			sqlMap.commitTransaction();
+			result = sqlMapClientTemplate.delete(id,value);
 			
 		} catch (Exception e) {
 			System.out.println(e.toString());
 			
-		}finally {
-			sqlMap.endTransaction();
 		}
 		
 		return result;
@@ -116,17 +104,11 @@ public class CommonDAOImpl implements CommonDAO{
 		
 		try {
 			
-			sqlMap.startTransaction();
-			
-			result = sqlMap.delete(id,map);
-			
-			sqlMap.commitTransaction();
+			result = sqlMapClientTemplate.delete(id,map);
 			
 		} catch (Exception e) {
 			System.out.println(e.toString());
 			
-		}finally {
-			sqlMap.endTransaction();
 		}
 		
 		return result;
@@ -139,17 +121,11 @@ public class CommonDAOImpl implements CommonDAO{
 		
 		try {
 			
-			sqlMap.startTransaction();
-			
-			result = sqlMap.delete(id);
-			
-			sqlMap.commitTransaction();
+			result = sqlMapClientTemplate.delete(id);
 			
 		} catch (Exception e) {
 			System.out.println(e.toString());
 			
-		}finally {
-			sqlMap.endTransaction();
 		}
 		
 		return result;
@@ -160,9 +136,9 @@ public class CommonDAOImpl implements CommonDAO{
 				
 		try {
 			
-			return sqlMap.queryForObject(id);
+			return sqlMapClientTemplate.queryForObject(id);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
@@ -174,9 +150,9 @@ public class CommonDAOImpl implements CommonDAO{
 		
 		try {
 			
-			return sqlMap.queryForObject(id,value);
+			return sqlMapClientTemplate.queryForObject(id,value);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
@@ -188,9 +164,9 @@ public class CommonDAOImpl implements CommonDAO{
 		
 		try {
 			
-			return sqlMap.queryForObject(id,map);
+			return sqlMapClientTemplate.queryForObject(id,map);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
@@ -202,9 +178,9 @@ public class CommonDAOImpl implements CommonDAO{
 		
 		try {
 			
-			return ((Integer)sqlMap.queryForObject(id)).intValue();
+			return ((Integer)sqlMapClientTemplate.queryForObject(id)).intValue();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
@@ -216,9 +192,9 @@ public class CommonDAOImpl implements CommonDAO{
 
 		try {
 			
-			return ((Integer)sqlMap.queryForObject(id,value)).intValue();
+			return ((Integer)sqlMapClientTemplate.queryForObject(id,value)).intValue();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
@@ -230,9 +206,9 @@ public class CommonDAOImpl implements CommonDAO{
 
 		try {
 			
-			return ((Integer)sqlMap.queryForObject(id,map)).intValue();
+			return ((Integer)sqlMapClientTemplate.queryForObject(id,map)).intValue();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
@@ -245,9 +221,9 @@ public class CommonDAOImpl implements CommonDAO{
 
 		try {
 			
-			return (List<Object>)sqlMap.queryForList(id);
+			return (List<Object>)sqlMapClientTemplate.queryForList(id);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
@@ -260,9 +236,9 @@ public class CommonDAOImpl implements CommonDAO{
 
 		try {
 			
-			return (List<Object>)sqlMap.queryForList(id,value);
+			return (List<Object>)sqlMapClientTemplate.queryForList(id,value);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
@@ -275,9 +251,9 @@ public class CommonDAOImpl implements CommonDAO{
 
 		try {
 			
-			return (List<Object>)sqlMap.queryForList(id,map);
+			return (List<Object>)sqlMapClientTemplate.queryForList(id,map);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
