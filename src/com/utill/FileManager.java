@@ -15,6 +15,8 @@ import org.springframework.util.FileCopyUtils;
 
 @Service("fileManager")
 public class FileManager {
+	//spring의 file은 file이 관리하는게 아니라 InputStream이 관리함
+	
 	
 	//파일 업로드
 	public static String doFileUpload(InputStream is,String originalFileName, String path) throws Exception {
@@ -56,7 +58,7 @@ public class FileManager {
 		
 		String fullFilePath = path + File.separator + newFileName;
 		
-		//Spring의 파일 업로드
+		//Spring의 파일 업로드(spring자체에서 만들어둔 클래스로 경로를 만든다.)
 		FileCopyUtils.copy(is, new FileOutputStream(fullFilePath));		
 		
 		return newFileName;

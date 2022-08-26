@@ -1,6 +1,6 @@
 package com.bbs;
 
-public class BoardCommand {
+public class BoardCommand { //dto역할을 함.
 
 	private int listNum;
 	

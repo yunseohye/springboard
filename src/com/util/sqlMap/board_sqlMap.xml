@@ -70,19 +70,10 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	content=#content#,pwd=#pwd# where boardNum=#boardNum#
 </update>
 
-<update id="orderNoUpdate" parameterClass="map">
-	update sbbs set orderNo=orderNo+1
-	where groupNum=#groupNum# and orderNo>#orderNo#
-</update>
 
 <delete id="deleteData" parameterClass="int">
 	delete sbbs where boardNum = #boardNum#
 </delete>
-
-
-
-
-
 
 
 

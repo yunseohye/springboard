@@ -24,22 +24,35 @@ import com.utill.MyPage;
 @Controller("bbs.boardController")
 public class BoardController {
 	
+	/*iBatis의 DB를 액세스 할 것이기 때문에 dao가 필요함.
+	dao의 객체를 생성해둔 장소는 CommonDAOImpl에 있음
+	불러낸 dao를 CommonDAO에 집어넣어주면 dao에 객체가 들어가기 때문에 
+	CommonDAO에 넣은 dao의 값을 사용할 수 있게 된다. */
+	
 	@Resource(name="dao")
 	private CommonDAO dao;
+	
+	/*com.utildml myPage를 받아내는 일반적인 클래스임
+	 @service로 객체를 생성하고 @resource로 값을 받아낸다*/
 	
 	@Resource(name="myPage")
 	private MyPage myPage;
 	
+	//메소드 생성(/bbs/created.action주소값이 들어오면 사용됨)
 	@RequestMapping(value="/bbs/created.action",
 			method= {RequestMethod.GET,RequestMethod.POST})
 	public String created(BoardCommand command,
 			HttpServletRequest request) throws Exception{
 		
+		//command나 mode가 null이면 창만 띄우면 된다.
 		if(command==null||command.getMode()==null||
 				command.getMode().equals("")) {
 			
+			//mode라는 변수에 insert라는 문장을 넣을 것이다.
 			request.setAttribute("mode", "insert");
 			
+			//보여지는 view에는 board/created를 띄운다.
+			//mode의 insert를 가지고 created에게 간다.
 			return "board/created";
 		}
 		
@@ -48,11 +61,14 @@ public class BoardController {
 		command.setBoardNum(boardNumMax + 1);
 		command.setIpAddr(request.getRemoteAddr());
 		
+		//bbs.insertData에 command에 있는 데이터를 넣어준다.
 		dao.insertData("bbs.insertData", command);
 		
+		//데이터를 입력했으면 redirect해준다.
 		return "redirect:/bbs/list.action";
 	}
 
+	//redirect로 list를 받아오기 때문에 list메소드를 생성해야함 
 	@RequestMapping(value="/bbs/list.action",
 			method= {RequestMethod.GET,RequestMethod.POST})
 	public String list(HttpServletRequest request) throws Exception{
@@ -94,6 +110,7 @@ public class BoardController {
 		hMap.put("searchKey", searchKey);
 		hMap.put("searchValue", searchValue);
 		
+		//전체 데이터를 불러옴
 		totalDataCount = dao.getIntValue("bbs.dataCount", hMap);
 		
 		if(totalDataCount!=0) {
@@ -118,6 +135,7 @@ public class BoardController {
 		Iterator<Object> it = lists.iterator();
 		while(it.hasNext()) {
 			
+			//꺼내려는 데이터가 object이기 때문에 반드시 다운캐스팅 해줘야함
 			BoardCommand vo = (BoardCommand)it.next();
 			
 			listNum = totalDataCount - (start + n - 1);
@@ -132,8 +150,9 @@ public class BoardController {
 		String urlList = "";
 		String urlArticle = "";
 		
+		//검색을 한 경우
 		if(!searchValue.equals("")) {
-			
+			//한글 인식 가능하게함
 			searchValue = URLEncoder.encode(searchValue,"UTF-8");
 			
 			params = "searchKey=" + searchKey +
@@ -141,14 +160,13 @@ public class BoardController {
 			
 		}
 		
-		
-		
+		//검색을 하지 않은 경우  경로
 		if(params.equals("")) {
 			
 			urlList = cp + "/bbs/list.action";
 			urlArticle = cp + "/bbs/article.action?pageNum=" + currentPage;
 			
-		} else {
+		} else { //검색을 한 경우 경로
 			
 			urlList = cp + "/bbs/list.action?" + params;
 			urlArticle = cp + "/bbs/article.action?pageNum=" +
@@ -165,6 +183,7 @@ public class BoardController {
 		request.setAttribute("pageIndexList",
 				myPage.pageIndexList(currentPage, totalPage, urlList));
 		
+		//board의 list.jsp로 가라
 		return "board/list";
 	}
 
@@ -256,7 +275,45 @@ public class BoardController {
 		
 		return "redirect:/bbs/list.action";
 		*/
+		
+		/*
+		메소드의 매개변수부분에 httpSession session에 넣어주면된다.
+		session = request.getSession();
+		session.setAttribute("pageNum", pageNum);
+		
+		return "redirect:/bbs/list.action";
+		 */
 		return "redirect:/bbs/list.action?pageNum=" + pageNum;
 	}	
 	
+	
+	@RequestMapping(value="/bbs/updated.action",
+			method= {RequestMethod.GET})
+	public String updateForm(HttpServletRequest request) throws Exception{
+		
+		int boardNum = Integer.parseInt(request.getParameter("boardNum"));
+		String pageNum = request.getParameter("pageNum");
+		System.out.println(boardNum);
+		BoardCommand dto =
+				(BoardCommand)dao.getReadData("bbs.readData",boardNum);
+		
+		request.setAttribute("dto", dto);
+		request.setAttribute("pageNum", pageNum);
+		request.setAttribute("mode", "update");
+		
+		return "board/created";
+	}	
+	
+	//실제로 수정이 되는 데이터
+	@RequestMapping(value="/bbs/updated.action",
+			method= {RequestMethod.POST})
+	public String updateSubmit(BoardCommand command,
+			HttpServletRequest request) throws Exception{
+		
+		dao.updateData("bbs.updateData", command);
+		
+		return "redirect:/bbs/list.action?pageNum=" + command.getPageNum();
+		
+	}
+		
 }

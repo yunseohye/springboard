@@ -40,10 +40,12 @@ public class TestController {
 			method= {RequestMethod.POST,RequestMethod.GET})
 	public String save(TestCommand command,HttpServletRequest request) {
 		
+		//처음에는 아무 값도 없기 때문에 창만 띄우면 된다.
 		if(command==null || command.getMode()==null || command.getMode().equals("")) {
 			return "anno/test";
 		}
 		
+		//데이터가 들어가고 난 후 보여질 값 
 		String message = "아이디: " + command.getUserId();
 		message += ", 이름: " + command.getUserName();
 		
@@ -53,15 +55,21 @@ public class TestController {
 		
 	}
 	
+	//하나하나 매개변수로 데이터를 받는 방식
 	@RequestMapping(value="/demo/demo.action", 
 			method= {RequestMethod.POST,RequestMethod.GET})
 	public String demo(String userId, String userName, String mode,
 			HttpServletRequest request) {
 		
+		//command를 매개변수로 적용하지 않았기 때문에 mode만 검사
 		if(mode==null || mode.equals("")) {
 			return "anno/demo";
 		}
 		
+		//mode가 null이 아니면 데이터를 넣었다는 것임
+		
+		//사용자에게 직접 값을 받았기 때문에 command.get이 필요없음,
+		//변수로 받았기 때문에 ()생략
 		String message = "아이디: " + userId;
 		message += ", 이름: " + userName;
 		

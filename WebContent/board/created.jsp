@@ -83,9 +83,9 @@
 		}
 		f.pwd.value = str;
 		
-		if(f.mode.value="insert"){
+		if(f.mode.value=="insert"){
 			f.action = "<%=cp%>/bbs/created.action";
-		} else if(f.mode.value="update") {
+		} else if(f.mode.value=="update") {
 			f.action = "<%=cp%>/bbs/updated.action";
 		}
 		
@@ -171,12 +171,22 @@
 		<input type="hidden" name="pageNum" value="${pageNum }">
 		<input type="hidden" name="mode" value="${mode }">
 
-			<input type="button" value=" 등록하기 "
-			class="btn2" onclick="sendIt();" />
-			<input type="reset" value=" 다시입력 " class="btn2" 
-			onclick="document.myForm.subject.focus();"/>
-			<input type="button" value=" 작성취소 " class="btn2" 
-			onclick="javascript:location.href='<%=cp %>/bbs/list.action';"/>
+	
+			<c:if test="${mode=='insert' }">
+				<input type="button" value=" 등록하기 "
+				class="btn2" onclick="sendIt();" />
+				<input type="reset" value=" 다시입력 " class="btn2" 
+				onclick="document.myForm.subject.focus();"/>
+				<input type="button" value=" 작성취소 " class="btn2" 
+				onclick="javascript:location.href='<%=cp %>/bbs/list.action';"/>
+			</c:if>
+			
+			<c:if test="${mode=='update' }">
+				<input type="button" value=" 수정하기 "
+				class="btn2" onclick="sendIt();" />
+				<input type="button" value=" 수정취소 " class="btn2" 
+				onclick="javascript:location.href='<%=cp %>/bbs/list.action?pageNum=${pageNum }';"/>
+			</c:if>
 		</div>
 	
 	</form>

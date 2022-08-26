@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
  page : page index 숫자
  */
 
+//일반적인 단순한 클래스에는 @service사용함.
+//나중에 밖에서 myPage를 받아서 쓰면 된다.
 @Service("myPage")
 public class MyPage {
 
